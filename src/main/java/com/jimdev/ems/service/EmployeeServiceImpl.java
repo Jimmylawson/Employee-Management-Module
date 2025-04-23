@@ -1,39 +1,60 @@
 package com.jimdev.ems.service;
 
 import com.jimdev.ems.dto.EmployeeRequestDto;
+import com.jimdev.ems.exceptions.EmployeeNotFoundException;
+
+import com.jimdev.ems.mapper.EmployeeMapper;
 import com.jimdev.ems.model.Employee;
 import com.jimdev.ems.repository.EmployeeRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService{
     private final EmployeeRepository employeeRepository;
+    private final EmployeeMapper employeeMapper;
     @Override
-    public Employee save(EmployeeRequestDto employeeRequestDto) {
-        return null;
+    public Employee save(@Valid EmployeeRequestDto employeeRequestDto) {
+      if(employeeRepository.existsByEmail(employeeRequestDto.getEmail())) {
+          throw new ResponseStatusException(HttpStatus.CONFLICT,"Email already exist");
+      }
+
+      return employeeRepository.save(employeeMapper.toEntity(employeeRequestDto));
     }
 
     @Override
-    public Employee update(EmployeeRequestDto employeeRequestDto) {
-        return null;
+    public Employee update(Long id,EmployeeRequestDto employeeRequestDto) {
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(()-> new EmployeeNotFoundException("Employee not found"));
+
+        employeeMapper.update(employeeRequestDto, existingEmployee);
+
+        return employeeRepository.save(existingEmployee);
     }
 
     @Override
     public void delete(Long id) {
-
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(()-> new EmployeeNotFoundException("Employee not found"));
+        employeeRepository.deleteById(employee.getId());
     }
 
     @Override
-    public Employee findById(Long id) {
-        return null;
+    public Optional<Employee> findById(Long id) {
+        return employeeRepository.findById(id);
     }
 
     @Override
     public List<Employee> findAll() {
-        return List.of();
+        return employeeRepository.findAll();
     }
+
 }
