@@ -6,7 +6,6 @@ import com.jimdev.ems.exceptions.EmployeeNotFoundException;
 import com.jimdev.ems.mapper.EmployeeMapper;
 import com.jimdev.ems.model.Employee;
 import com.jimdev.ems.repository.EmployeeRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -21,14 +20,16 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService{
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
+
     @Override
     public Employee save( EmployeeRequestDto employeeRequestDto) {
       if(employeeRepository.existsByEmail(employeeRequestDto.getEmail())) {
           throw new ResponseStatusException(HttpStatus.CONFLICT,"Email already exist");
       }
-
-      return employeeRepository.save(employeeMapper.toEntity(employeeRequestDto));
+      Employee emp = employeeMapper.toEntity(employeeRequestDto);
+      return employeeRepository.save(emp);
     }
+
 
     @Override
     public Employee update(Long id,EmployeeRequestDto employeeRequestDto) {
@@ -55,6 +56,11 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public List<Employee> findAll() {
         return employeeRepository.findAll();
+    }
+
+    @Override
+    public Employee savedUpdated(Employee employee) {
+        return employeeRepository.save(employee);
     }
 
 }

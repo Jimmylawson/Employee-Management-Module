@@ -3,18 +3,17 @@ package com.jimdev.ems.controller;
 import com.jimdev.ems.dto.EmployeeRequestDto;
 import com.jimdev.ems.dto.EmployeeResponseDto;
 import com.jimdev.ems.mapper.EmployeeMapper;
+
 import com.jimdev.ems.model.Employee;
 import com.jimdev.ems.service.EmployeeServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -24,9 +23,9 @@ public class EmployeeController {
     private final EmployeeMapper employeeMapper;
 
     @PostMapping("")
-    public ResponseEntity<EmployeeResponseDto> save(@Valid  @RequestBody EmployeeRequestDto employeeRequestDto) {
-        var employeeResponseDto = employeeMapper.toResponse(employeeService.save(employeeRequestDto));
-
+    public ResponseEntity<EmployeeResponseDto> save(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
+        var employee = employeeService.save(employeeRequestDto);
+        var employeeResponseDto = employeeMapper.toResponse(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeResponseDto);
     }
     @GetMapping("/{id}")
@@ -52,29 +51,32 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id){
+    public ResponseEntity<String> deleteEmployee(@PathVariable Long id){
         employeeService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted!");
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDto> patchEmployee(@PathVariable Long id, EmployeeRequestDto employeeRequestDto){
-        var findEmployee = employeeService.findById(id);
+    public ResponseEntity<EmployeeResponseDto> patchEmployee(@PathVariable Long id, @Valid @RequestBody EmployeeRequestDto employeeRequestDto){
+        //Finding existing employee
+        var existingEmployee = employeeService.findById(id)
+                .orElseThrow(()-> new RuntimeException("Employee not found"));
 
-        var employee = findEmployee.get();
+        /// Use mapper to copy fields from the request to the existing item
+        employeeMapper.update(employeeRequestDto, existingEmployee);
 
-        employeeMapper.update(employeeRequestDto, employee);
+        /// saving it in the db
+        var savedEmployee = employeeService.savedUpdated(existingEmployee);
 
-        return ResponseEntity.status(HttpStatus.OK).body(employeeMapper.toResponse(employee));
+        return ResponseEntity.ok(employeeMapper.toResponse(savedEmployee));
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDto> updateEmployee(@PathVariable Long id,EmployeeRequestDto employeeRequestDto){
+    public ResponseEntity<EmployeeResponseDto> updateEmployee(@PathVariable Long id,@Valid @RequestBody EmployeeRequestDto employeeRequestDto){
         var employee = employeeService.findById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(employeeMapper.toResponse(employeeService.update(id, employeeRequestDto)));
     }
-
-
 
 
 

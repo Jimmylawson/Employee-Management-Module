@@ -1,15 +1,19 @@
 package com.jimdev.ems.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeRequestDto {
+    @NotBlank
     private String firstName;
+   @NotBlank
     private String lastName;
+    @NotBlank
+    @Email
     private String email;
-
 }

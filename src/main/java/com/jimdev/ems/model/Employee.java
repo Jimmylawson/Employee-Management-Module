@@ -1,33 +1,26 @@
 package com.jimdev.ems.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+import lombok.*;
+
+
 @Entity
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter @Setter
 @Table(name = "employees")
 public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
+
     private String firstName;
-    @NotBlank
     private String lastName;
-
     @Column(name="email",nullable = false,unique = true)
-    @Email
     private String email;
-
 
 
 }

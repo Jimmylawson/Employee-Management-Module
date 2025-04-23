@@ -13,6 +13,6 @@ public interface EmployeeService {
     void delete(Long id);
     Optional<Employee> findById(Long id);
     List<Employee> findAll();
-
+    public Employee savedUpdated(Employee employee);
 
 }
