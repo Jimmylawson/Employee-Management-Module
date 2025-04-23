@@ -22,7 +22,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
     @Override
-    public Employee save(@Valid EmployeeRequestDto employeeRequestDto) {
+    public Employee save( EmployeeRequestDto employeeRequestDto) {
       if(employeeRepository.existsByEmail(employeeRequestDto.getEmail())) {
           throw new ResponseStatusException(HttpStatus.CONFLICT,"Email already exist");
       }

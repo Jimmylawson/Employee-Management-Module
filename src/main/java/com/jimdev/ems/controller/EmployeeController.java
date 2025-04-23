@@ -5,6 +5,7 @@ import com.jimdev.ems.dto.EmployeeResponseDto;
 import com.jimdev.ems.mapper.EmployeeMapper;
 import com.jimdev.ems.model.Employee;
 import com.jimdev.ems.service.EmployeeServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
@@ -23,14 +24,16 @@ public class EmployeeController {
     private final EmployeeMapper employeeMapper;
 
     @PostMapping("")
-    public ResponseEntity<EmployeeResponseDto> save(EmployeeRequestDto employeeRequestDto) {
+    public ResponseEntity<EmployeeResponseDto> save(@Valid  @RequestBody EmployeeRequestDto employeeRequestDto) {
         var employeeResponseDto = employeeMapper.toResponse(employeeService.save(employeeRequestDto));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeResponseDto);
     }
-    @GetMapping("/id")
-    public ResponseEntity<EmployeeResponseDto> findById(Long id) {
-        var employeeResponseDto = employeeMapper.toResponse(employeeService.findById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeResponseDto> findById(@PathVariable Long id) {
+        var getEmployee = employeeService.findById(id)
+                .orElseThrow(()-> new RuntimeException("Employee not found"));
+        var employeeResponseDto = employeeMapper.toResponse(getEmployee);
 
         return ResponseEntity.status(HttpStatus.OK).body(employeeResponseDto);
 
@@ -48,7 +51,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
-    @DeleteMapping("/{id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id){
         employeeService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -65,7 +68,7 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(employeeMapper.toResponse(employee));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDto> updateEmployee(@PathEmployee Long id,EmployeeRequestDto employeeRequestDto){
+    public ResponseEntity<EmployeeResponseDto> updateEmployee(@PathVariable Long id,EmployeeRequestDto employeeRequestDto){
         var employee = employeeService.findById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(employeeMapper.toResponse(employeeService.update(id, employeeRequestDto)));
