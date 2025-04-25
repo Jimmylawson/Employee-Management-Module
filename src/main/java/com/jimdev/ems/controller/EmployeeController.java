@@ -4,17 +4,17 @@ import com.jimdev.ems.dto.EmployeeRequestDto;
 import com.jimdev.ems.dto.EmployeeResponseDto;
 import com.jimdev.ems.mapper.EmployeeMapper;
 
-import com.jimdev.ems.model.Employee;
 import com.jimdev.ems.service.EmployeeServiceImpl;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/employees")
@@ -22,6 +22,12 @@ public class EmployeeController {
     private final EmployeeServiceImpl employeeService;
     private final EmployeeMapper employeeMapper;
 
+//    @Operation(summary = "Create a new employee",
+//            description = "This endpoint creates a new employee")
+//    @ApiResponses(value= {
+//            @ApiResponse(responseCode = "201", description = "Successfully created"),
+//            @ApiResponse(responseCode = "400", description = "Invalid input")
+//    })
     @PostMapping("")
     public ResponseEntity<EmployeeResponseDto> save(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
         var employee = employeeService.save(employeeRequestDto);
@@ -53,7 +59,7 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmployee(@PathVariable Long id){
         employeeService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted!");
+        return ResponseEntity.status(HttpStatus.OK).body("Employee deleted successfully!");
     }
 
     @PatchMapping("/{id}")

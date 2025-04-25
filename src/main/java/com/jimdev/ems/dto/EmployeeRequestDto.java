@@ -7,7 +7,6 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class EmployeeRequestDto {
     @NotBlank
     private String firstName;
