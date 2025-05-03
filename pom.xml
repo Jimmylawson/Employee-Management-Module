@@ -8,11 +8,11 @@
 		<version>3.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.coffeemenu</groupId>
-	<artifactId>CoffeeMenu</artifactId>
+	<groupId>com.employee</groupId>
+	<artifactId>employee-management</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>CoffeeMenu</name>
-	<description>Coffee Menu API </description>
+	<name>Employee Management System</name>
+	<description>Employee Management API </description>
 	<url/>
 	<licenses>
 		<license/>
@@ -94,23 +94,23 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!--		<dependency>-->
-		<!--			<groupId>io.jsonwebtoken</groupId>-->
-		<!--			<artifactId>jjwt-api</artifactId>-->
-		<!--			<version>0.11.5</version>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>io.jsonwebtoken</groupId>-->
-		<!--			<artifactId>jjwt-impl</artifactId>-->
-		<!--			<version>0.11.5</version>-->
-		<!--			<scope>runtime</scope>-->
-		<!--		</dependency>-->
-		<!--		<dependency>-->
-		<!--			<groupId>io.jsonwebtoken</groupId>-->
-		<!--			<artifactId>jjwt-jackson</artifactId>-->
-		<!--			<version>0.11.5</version>-->
-		<!--			<scope>runtime</scope>-->
-		<!--		</dependency>-->
+				<dependency>
+					<groupId>io.jsonwebtoken</groupId>
+					<artifactId>jjwt-api</artifactId>
+					<version>0.11.5</version>
+				</dependency>
+				<dependency>
+					<groupId>io.jsonwebtoken</groupId>
+					<artifactId>jjwt-impl</artifactId>
+					<version>0.11.5</version>
+					<scope>runtime</scope>
+				</dependency>
+				<dependency>
+					<groupId>io.jsonwebtoken</groupId>
+					<artifactId>jjwt-jackson</artifactId>
+					<version>0.11.5</version>
+					<scope>runtime</scope>
+				</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>

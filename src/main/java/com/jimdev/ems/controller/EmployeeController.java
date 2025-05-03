@@ -31,18 +31,20 @@ public class EmployeeController {
 
 
 
-//    @Operation(
-//            summary = "Login user",
-//            description = "Authenticate a user with username and password")
-//    @ApiResponse(
-//            responseCode = "200",
-//            description = "Login successful"
-//
-//    )
-////    @PostMapping("/login")
-////    public ResponseEntity<LoginResponseDto> loginPage(@Valid @RequestBody LoginRequestDto loginRequestDto){
-////
-////    }
+    @Operation(
+            summary = "Login user",
+            description = "Authenticate a user with username and password")
+    @ApiResponse(
+            responseCode = "200",
+            description = "Login successful"
+
+    )
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> loginPage(@Valid @RequestBody LoginRequestDto loginRequestDto){
+        String token  = employeeService.login(loginRequestDto);
+        return ResponseEntity.ok(new LoginResponseDto(token));
+    }
+
     @Operation(summary = "Create a new employee",
             description = "This endpoint creates a new employee")
     @ApiResponses(value= {

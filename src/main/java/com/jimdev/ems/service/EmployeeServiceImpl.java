@@ -1,14 +1,23 @@
 package com.jimdev.ems.service;
 
 import com.jimdev.ems.dto.EmployeeRequestDto;
+import com.jimdev.ems.dto.login.LoginRequestDto;
 import com.jimdev.ems.exceptions.EmployeeNotFoundException;
 
+import com.jimdev.ems.filters.JwtAuthFilter;
 import com.jimdev.ems.mapper.EmployeeMapper;
 import com.jimdev.ems.model.Employee;
 import com.jimdev.ems.repository.EmployeeRepository;
+import com.jimdev.ems.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.Jar;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,6 +31,9 @@ public class EmployeeServiceImpl implements EmployeeService{
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final AuthenticationManager authenticationManager;
+
 
     @Override
     public Employee save( EmployeeRequestDto employeeRequestDto) {
@@ -71,6 +83,22 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public Optional<Employee> findByEmail(String email) {
         return employeeRepository.findByEmail(email);
+    }
+
+    @Override
+    public String login(LoginRequestDto loginRequest) {
+        /// Using authentication to authentication the username and generate a token
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getFirstName(), loginRequest.getPassword()));
+        /// Going to hold the authentication of the user so the user don't need to login everytime or the lifetime of the login
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+        /// Because the authenticationManager returns an object, we can get the authenticated user from the Authentication
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        /// Generate JWT token
+        return jwtTokenUtil.generateToken(userDetails);
+
     }
 
 }

@@ -9,5 +9,6 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class LoginRequestDto {
     private String firstName;
+    private String password;
     private String email;
 }

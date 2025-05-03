@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: ems-backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/em_system
+    username: root
+    password: Jimmylawson1
+    driver-class-name: com.mysql.cj.jdbc.Driver  # Add this line
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: create-drop
+
+  security:
+    user:
+      name: user
+      password: 123
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  show-actuator: true
