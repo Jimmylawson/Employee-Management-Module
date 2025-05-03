@@ -2,6 +2,8 @@ package com.jimdev.ems.controller;
 
 import com.jimdev.ems.dto.EmployeeRequestDto;
 import com.jimdev.ems.dto.EmployeeResponseDto;
+import com.jimdev.ems.dto.login.LoginRequestDto;
+import com.jimdev.ems.dto.login.LoginResponseDto;
 import com.jimdev.ems.mapper.EmployeeMapper;
 
 import com.jimdev.ems.service.EmployeeServiceImpl;
@@ -9,6 +11,7 @@ import com.jimdev.ems.service.EmployeeServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,7 @@ import java.util.List;
 
 
 @CrossOrigin("*")
+@Tag(name="Employee Management System", description = "This API allows you to manage employees, including creating, updating, and deleting employee records.")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/employees")
@@ -25,12 +29,27 @@ public class EmployeeController {
     private final EmployeeServiceImpl employeeService;
     private final EmployeeMapper employeeMapper;
 
+
+
+//    @Operation(
+//            summary = "Login user",
+//            description = "Authenticate a user with username and password")
+//    @ApiResponse(
+//            responseCode = "200",
+//            description = "Login successful"
+//
+//    )
+////    @PostMapping("/login")
+////    public ResponseEntity<LoginResponseDto> loginPage(@Valid @RequestBody LoginRequestDto loginRequestDto){
+////
+////    }
     @Operation(summary = "Create a new employee",
             description = "This endpoint creates a new employee")
     @ApiResponses(value= {
             @ApiResponse(responseCode = "201", description = "Successfully created"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
+
     @PostMapping("")
     public ResponseEntity<EmployeeResponseDto> save(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
         var employee = employeeService.save(employeeRequestDto);

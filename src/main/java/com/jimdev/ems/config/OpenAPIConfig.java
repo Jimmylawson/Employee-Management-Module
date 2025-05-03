@@ -1,4 +1,4 @@
-package com.jimdev.ems.swagger;
+package com.jimdev.ems.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -16,7 +16,7 @@ public class OpenAPIConfig {
                 .info(new Info()
                         .title("Employee Management System API")
                         .version("1.0.0")
-                        .description("This API allows you to manage employees, including creating, updating, and deleting employee records.")
+                        .description("API for managing employees.")
                         .contact(
                                 new Contact()
                                         .name("Jim Osei")

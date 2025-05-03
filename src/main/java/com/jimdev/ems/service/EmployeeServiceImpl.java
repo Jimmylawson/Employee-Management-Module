@@ -9,6 +9,7 @@ import com.jimdev.ems.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,14 +21,18 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService{
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Employee save( EmployeeRequestDto employeeRequestDto) {
-      if(employeeRepository.existsByEmail(employeeRequestDto.getEmail())) {
+      if(employeeRepository.findByEmail(employeeRequestDto.getEmail()).isPresent()) {
           throw new ResponseStatusException(HttpStatus.CONFLICT,"Email already exist");
       }
-      Employee emp = employeeMapper.toEntity(employeeRequestDto);
-      return employeeRepository.save(emp);
+        // Encode password
+        employeeRequestDto.setPassword(passwordEncoder.encode(employeeRequestDto.getPassword()));
+
+      return employeeRepository.save(employeeMapper.toEntity(employeeRequestDto));
+
     }
 
 
@@ -61,6 +66,11 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public Employee savedUpdated(Employee employee) {
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public Optional<Employee> findByEmail(String email) {
+        return employeeRepository.findByEmail(email);
     }
 
 }

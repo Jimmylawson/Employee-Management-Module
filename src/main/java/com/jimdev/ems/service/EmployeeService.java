@@ -14,5 +14,6 @@ public interface EmployeeService {
     Optional<Employee> findById(Long id);
     List<Employee> findAll();
     public Employee savedUpdated(Employee employee);
+    public  Optional<Employee> findByEmail(String email);
 
 }
